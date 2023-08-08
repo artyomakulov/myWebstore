@@ -7,9 +7,7 @@ import { ROUTES } from "../../utils/routes";
 
 import LOGO from "../../images/LOGO.svg";
 import avatar from "../../images/avatar.svg";
-import search from "../../images/search.svg";
-import heart from "../../images/heart.svg";
-import bag from '../../images/bag.svg'
+
 
 const Header = () => {
   return (
@@ -29,7 +27,9 @@ const Header = () => {
         </div>
         <form className={css.form}>
           <div className={css.icon}>
-            <img src={search} alt="loop" />
+            <svg className="icon">
+              <use href="/sprite.svg#search" />
+            </svg>
           </div>
           <div className={css.input}>
             <input
@@ -45,10 +45,14 @@ const Header = () => {
         </form>
         <div className={css.account}>
           <Link to={ROUTES.HOME} className={css.favorites}>
-            <img src={heart} alt="favorites"  className={css.icon_fav}/>
+          <svg className={css.icon_fav}>
+              <use href="/sprite.svg#heart" />
+            </svg>
           </Link>
           <Link to={ROUTES.CART} className={css.cart} >
-            <img src={bag} alt="bag" className={css.icon_cart}/>
+          <svg className={css.icon_cart}>
+              <use href="/sprite.svg#bag" />
+            </svg>
             <span className={css.count}>0</span>
           </Link>
         </div>

@@ -1,26 +1,46 @@
-import { createSlice } from "@reduxjs/toolkit";
-// import axios from "axios";
-// import { BASE_URL } from "../../utils/constants";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
 
-// export const getCategories = createAsyncThunk(
-//   "categories/getCategories",
-//   async (_, thunkAPI) => {
-//     try {
-//       const res = await axios(`${BASE_URL}/categories`);
-//       return res.data;
-//     } catch (error) {
-//       console.log("error", error);
-//       return thunkAPI.rejectWithValue(error);
-//     }
-//   }
-// );
+export const createUser = createAsyncThunk(
+  "users/createUser",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/users`, payload);
+      return res.data;
+    } catch (error) {
+      console.log("error", error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const loginUser = createAsyncThunk(
+  "users/loginUser",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/login`, payload);
+      const login = await axios(`${BASE_URL}/auth/login`, {
+        headers: {
+          Authorization: `Bearer ${res.access_token}`,
+        },
+      });
+      return login.data;
+    } catch (error) {
+      console.log("error", error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    currentUser: [],
+    currentUser: null,
     cart: [],
     isLoading: false,
+    formType: "signup",
+    showForm: false,
   },
   reducers: {
     addItemToCart: (state, { payload }) => {
@@ -35,21 +55,23 @@ const userSlice = createSlice({
       } else newCart.push({ ...payload, quantity: 1 });
       state.cart = newCart;
     },
+    toggleForm: (state, { payload }) => {
+      state.showForm = payload;
+    },
+    toggleFormType: (state, { payload }) => {
+      state.formType = payload;
+    },
   },
   extraReducers: (builder) => {
-    // builder.addCase(getCategories.pending, (state, action) => {
-    //   state.isLoading = true;
-    // });
-    // builder.addCase(getCategories.fulfilled, (state, action) => {
-    //   state.list = action.payload;
-    //   state.isLoading = false;
-    // });
-    // builder.addCase(getCategories.rejected, (state, action) => {
-    //   state.isLoading = false;
-    // });
+    builder.addCase(createUser.fulfilled, (state, { payload }) => {
+      state.currentUser = payload;
+    });
+    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
+      state.currentUser = payload;
+    });
   },
 });
 
-export const { addItemToCart } = userSlice.actions;
+export const { addItemToCart, toggleForm, toggleFormType } = userSlice.actions;
 
 export default userSlice.reducer;

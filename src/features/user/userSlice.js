@@ -20,12 +20,25 @@ export const loginUser = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/login`, payload);
-      const login = await axios(`${BASE_URL}/auth/login`, {
+      const login = await axios(`${BASE_URL}/auth/profile`, {
         headers: {
-          Authorization: `Bearer ${res.access_token}`,
+          Authorization: `Bearer ${res.data.access_token}`,
         },
       });
       return login.data;
+    } catch (error) {
+      console.log("error", error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  "users/updateUser",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await axios.put(`${BASE_URL}/users/${payload.id}`, payload);
+      return res.data;
     } catch (error) {
       console.log("error", error);
       return thunkAPI.rejectWithValue(error);
@@ -67,6 +80,9 @@ const userSlice = createSlice({
       state.currentUser = payload;
     });
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
+      state.currentUser = payload;
+    });
+    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
       state.currentUser = payload;
     });
   },

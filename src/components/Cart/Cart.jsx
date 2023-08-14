@@ -53,7 +53,7 @@ const Cart = () => {
                       }
                     >
                       <svg className="icon">
-                        <use href="/spriter.svg#minus" />
+                        <use href="/sprite.svg#minus" />
                       </svg>
                     </div>
 
@@ -66,7 +66,7 @@ const Cart = () => {
                       }
                     >
                       <svg className="icon">
-                        <use href="/spriter.svg#plus" />
+                        <use href="/sprite.svg#plus" />
                       </svg>
                     </div>
                   </div>
@@ -78,7 +78,7 @@ const Cart = () => {
                     onClick={() => removeItem(item.id)}
                   >
                     <svg className="icon">
-                      <use href="/spriter.svg#close" />
+                      <use href="/sprite.svg#close" />
                     </svg>
                   </div>
                 </div>

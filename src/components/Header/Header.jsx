@@ -102,7 +102,9 @@ const Header = () => {
             <svg className={css.icon_cart}>
               <use href="/sprite.svg#bag" />
             </svg>
-            {cart.length && <span className={css.count}>{cart.length}</span>}
+            {cart.length > 0 ? (
+              <span className={css.count}>{cart.length}</span>
+            ) : null}
           </Link>
         </div>
       </div>

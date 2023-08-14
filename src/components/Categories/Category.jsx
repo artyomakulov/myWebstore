@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-
 import { useGetProductsQuery } from "../../features/api/apiSlice";
-
 import css from "../../styles/Category.module.css";
-
 import Products from "../Products/Products";
+import { useSelector } from "react-redux";
 
 const Category = () => {
   const { id } = useParams();
@@ -20,44 +17,30 @@ const Category = () => {
 
   const defaultParams = {
     categoryId: id,
-    limit: 5,
-    offset: 0,
     ...defaultValues,
   };
 
-  const [isEnd, setIsEnd] = useState(false);
-  const [cat, setCat] = useState(null);
-  const [items, setItems] = useState([]);
-  const [values, setValues] = useState(defaultValues);
-  const [params, setParams] = useState(defaultParams);
+  const [cat, setCat] = useState("");
 
-  const { data = [], isLoading, isSuccess } = useGetProductsQuery(params);
+  const [values, setValues] = useState(defaultValues);
+
+  const [params, setParams] = useState(defaultParams);
 
   useEffect(() => {
     if (!id) return;
-
-    setValues(defaultValues);
-    setItems([]);
-    setIsEnd(false);
     setParams({ ...defaultParams, categoryId: id });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
-    if (isLoading) return;
-
-    if (!data.length) return setIsEnd(true);
-
-    setItems((_items) => [..._items, ...data]);
-  }, [data, isLoading]);
-
-  useEffect(() => {
     if (!id || !list.length) return;
-
-    const category = list.find((item) => item.id === id * 1);
-
-    setCat(category);
+    const { name } = list.find((item) => item.id === id * 1);
+    setCat(name);
   }, [list, id]);
+
+  const { data, isLoading, isSuccess } = useGetProductsQuery({
+    categoryId: id,
+  });
 
   const handleChange = ({ target: { value, name } }) => {
     setValues({ ...values, [name]: value });
@@ -65,29 +48,19 @@ const Category = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    setItems([]);
-    setIsEnd(false);
-    setParams({ ...defaultParams, ...values });
-  };
-
-  const handleReset = () => {
-    setValues(defaultValues);
-    setParams(defaultParams);
-    setIsEnd(false);
+    setParams({ ...params, ...values });
   };
 
   return (
     <section className={css.wrapper}>
-      <h2 className={css.title}>{cat?.name}</h2>
-
+      <h2 className={css.title}>{cat}</h2>
       <form className={css.filters} onSubmit={handleSubmit}>
         <div className={css.filter}>
           <input
             type="text"
             name="title"
             onChange={handleChange}
-            placeholder="Product name"
+            placeholder="product name"
             value={values.title}
           />
         </div>
@@ -99,7 +72,6 @@ const Category = () => {
             placeholder="0"
             value={values.price_min}
           />
-          <span>Price from</span>
         </div>
         <div className={css.filter}>
           <input
@@ -109,38 +81,23 @@ const Category = () => {
             placeholder="0"
             value={values.price_max}
           />
-          <span>Price to</span>
         </div>
-
         <button type="submit" hidden />
       </form>
-
       {isLoading ? (
-        <div className="preloader">Loading...</div>
-      ) : !isSuccess || !items.length ? (
+        <div className="preloader">Loading</div>
+      ) : !isSuccess || !data.length ? (
         <div className={css.back}>
           <span>No results</span>
-          <button onClick={handleReset}>Reset</button>
+          <button>reset</button>
         </div>
       ) : (
         <Products
           title=""
-          products={items}
+          products={data}
           style={{ padding: 0 }}
-          amount={items.length}
+          amount={data.length}
         />
-      )}
-
-      {!isEnd && (
-        <div className={css.more}>
-          <button
-            onClick={() =>
-              setParams({ ...params, offset: params.offset + params.limit })
-            }
-          >
-            See more
-          </button>
-        </div>
       )}
     </section>
   );

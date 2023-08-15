@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import css from "../../styles/Profile.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../../features/user/userSlice";
+import { updateUser } from "../../features/user/operation";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -14,12 +14,10 @@ const Profile = () => {
     avatar: "",
   });
 
-
   useEffect(() => {
     if (!currentUser) return;
     setValues(currentUser);
   }, [currentUser]);
-
 
   const handleChange = ({ target: { value, name } }) => {
     setValues({ ...values, [name]: value });

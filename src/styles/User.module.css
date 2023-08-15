@@ -41,6 +41,12 @@
   border-radius: 8px;
   color: var(--light);
   padding: 12px 24px;
+  border: 1px solid transparent;
+}
+
+.group input:focus {
+  border: 1px solid var( --violet-dark);
+  /* outline: none;  */
 }
 
 .submit {

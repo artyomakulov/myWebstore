@@ -1,3 +1,15 @@
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .header {
   width: 100%;
   display: flex;
@@ -21,6 +33,10 @@
   align-items: center;
   column-gap: 10px;
   cursor: pointer;
+}
+
+.user:hover {
+  animation: pulse 1s infinite;
 }
 
 .avatar {
@@ -103,10 +119,12 @@
 
 .icon_fav:hover {
   stroke: var(--white);
+  animation: pulse 1s infinite;
 }
 
 .icon_cart:hover {
   fill: var(--white);
+  animation: pulse 1s infinite;
 }
 
 .cart {

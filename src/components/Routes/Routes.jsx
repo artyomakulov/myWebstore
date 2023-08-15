@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "../Home/Home";
 import { ROUTES } from "../../utils/routes";
 import SingleProduct from "../Products/SingleProduct";
@@ -14,7 +14,8 @@ const AppRoutes = () => {
       <Route path={ROUTES.PRODUCT} element={<SingleProduct />} />
       <Route path={ROUTES.PROFILE} element={<Profile />} />
       <Route path={ROUTES.CATEGORY} element={<SingleCategory />} />
-      <Route path={ROUTES.CART} element={<Cart/>} />
+      <Route path={ROUTES.CART} element={<Cart />} />
+      <Route path="*" element={<Navigate to="/" replace={true} />} />
     </Routes>
   );
 };

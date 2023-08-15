@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import css from "../../styles/User.module.css";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../features/user/userSlice";
+import { createUser } from "../../features/user/operation";
 
 const UserRegisterForm = ({ toggleCurrentFormType, closeForm }) => {
   const dispatch = useDispatch();

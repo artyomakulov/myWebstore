@@ -25,7 +25,7 @@ const UserForm = () => {
           toggleCurrentFormType={toggleCurrentFormType}
           closeForm={closeForm}
         />
-      )}UserLoginForm
+      )}
     </>
   ) : (
     <></>

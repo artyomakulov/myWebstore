@@ -79,7 +79,7 @@ const Product = (item) => {
           <button className={css.favorite}>Add to favorite</button>
         </div>
         <div className={css.bottom}>
-          <div className={css.purchase}>19 people purchased</div>
+          <div>19 people purchased</div>
           <Link to={ROUTES.HOME}>Return to store</Link>
         </div>
       </div>

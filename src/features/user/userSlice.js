@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 export const createUser = createAsyncThunk(
   "users/createUser",
@@ -47,10 +48,6 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-const addCurrentUser = (state, { payload }) => {
-  state.currentUser = payload;
-};
-
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -86,9 +83,39 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createUser.fulfilled, addCurrentUser);
-    builder.addCase(loginUser.fulfilled, addCurrentUser);
-    builder.addCase(updateUser.fulfilled, addCurrentUser);
+    builder
+      .addCase(createUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.isLoading = false;
+        Notify.failure(action.payload);
+      })
+      .addCase(loginUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        Notify.failure(action.payload);
+      })
+      .addCase(updateUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+      });
   },
 });
 

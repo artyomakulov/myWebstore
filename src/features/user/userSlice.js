@@ -8,9 +8,9 @@ export const createUser = createAsyncThunk(
     try {
       const res = await axios.post(`${BASE_URL}/users`, payload);
       return res.data;
-    } catch (error) {
-      console.log("error", error);
-      return thunkAPI.rejectWithValue(error);
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
     }
   }
 );
@@ -25,10 +25,11 @@ export const loginUser = createAsyncThunk(
           Authorization: `Bearer ${res.data.access_token}`,
         },
       });
+
       return login.data;
-    } catch (error) {
-      console.log("error", error);
-      return thunkAPI.rejectWithValue(error);
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
     }
   }
 );
@@ -39,12 +40,16 @@ export const updateUser = createAsyncThunk(
     try {
       const res = await axios.put(`${BASE_URL}/users/${payload.id}`, payload);
       return res.data;
-    } catch (error) {
-      console.log("error", error);
-      return thunkAPI.rejectWithValue(error);
+    } catch (err) {
+      console.log(err);
+      return thunkAPI.rejectWithValue(err);
     }
   }
 );
+
+const addCurrentUser = (state, { payload }) => {
+  state.currentUser = payload;
+};
 
 const userSlice = createSlice({
   name: "user",
@@ -59,6 +64,7 @@ const userSlice = createSlice({
     addItemToCart: (state, { payload }) => {
       let newCart = [...state.cart];
       const found = state.cart.find(({ id }) => id === payload.id);
+
       if (found) {
         newCart = newCart.map((item) => {
           return item.id === payload.id
@@ -66,10 +72,11 @@ const userSlice = createSlice({
             : item;
         });
       } else newCart.push({ ...payload, quantity: 1 });
+
       state.cart = newCart;
     },
-    removeItemFromCart: (state, {payload}) => {
-      state.cart = state.cart.filter(({id}) => id !== payload.id)
+    removeItemFromCart: (state, { payload }) => {
+      state.cart = state.cart.filter(({ id }) => id !== payload);
     },
     toggleForm: (state, { payload }) => {
       state.showForm = payload;
@@ -79,18 +86,13 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createUser.fulfilled, (state, { payload }) => {
-      state.currentUser = payload;
-    });
-    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
-      state.currentUser = payload;
-    });
-    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
-      state.currentUser = payload;
-    });
+    builder.addCase(createUser.fulfilled, addCurrentUser);
+    builder.addCase(loginUser.fulfilled, addCurrentUser);
+    builder.addCase(updateUser.fulfilled, addCurrentUser);
   },
 });
 
-export const { addItemToCart, removeItemFromCart, toggleForm, toggleFormType } = userSlice.actions;
+export const { addItemToCart, removeItemFromCart, toggleForm, toggleFormType } =
+  userSlice.actions;
 
 export default userSlice.reducer;

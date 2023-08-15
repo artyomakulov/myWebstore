@@ -17,7 +17,7 @@ const Header = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const { currentUser } = useSelector(({ user }) => user);
+  const { currentUser, cart } = useSelector(({ user }) => user);
 
   const [values, setValues] = useState({ name: "Guest", avatar: avatar });
 
@@ -102,7 +102,9 @@ const Header = () => {
             <svg className={css.icon_cart}>
               <use href="/sprite.svg#bag" />
             </svg>
-            <span className={css.count}>0</span>
+            {cart.length > 0 ? (
+              <span className={css.count}>{cart.length}</span>
+            ) : null}
           </Link>
         </div>
       </div>

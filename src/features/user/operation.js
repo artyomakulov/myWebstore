@@ -2,8 +2,6 @@ import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-
-
 export const createUser = createAsyncThunk(
   "users/createUser",
   async (payload, thunkAPI) => {
@@ -22,7 +20,7 @@ export const loginUser = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/login`, payload);
-      const token = res.data.access_token; 
+      const token = res.data.access_token;
       thunkAPI.dispatch(setToken(token));
 
       const login = await axios(`${BASE_URL}/auth/profile`, {
@@ -54,5 +52,6 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-
-export const logoutUser = createAction("user/logoutUser");
+export const logoutUser = createAction(
+  "user/logoutUser",
+);

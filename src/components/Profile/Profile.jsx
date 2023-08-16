@@ -36,7 +36,6 @@ const Profile = () => {
 
   const handleLogOut = () => {
     dispatch(logoutUser());
-    localStorage.removeItem("token");
   };
 
   return (

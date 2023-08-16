@@ -2,7 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-import { createUser, loginUser, updateUser, setToken, logoutUser } from "./operation";
+import {
+  createUser,
+  loginUser,
+  updateUser,
+  setToken,
+  logoutUser,
+} from "./operation";
 
 const userSlice = createSlice({
   name: "user",
@@ -77,10 +83,10 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
+      })
+      .addCase(setToken, (state, action) => {
+        state.token = action.payload;
       });
-    builder.addCase(setToken, (state, action) => {
-      state.token = action.payload;
-    });
   },
 });
 

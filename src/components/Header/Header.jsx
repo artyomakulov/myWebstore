@@ -28,6 +28,11 @@ const Header = () => {
     setValues(currentUser);
   }, [currentUser]);
 
+  useEffect(() => {
+    if (currentUser) return;
+    setValues({ name: "Guest", avatar: avatar });
+  }, [currentUser]);
+
   const handleClick = () => {
     if (!currentUser) dispatch(toggleForm(true));
     else navigate(ROUTES.PROFILE);

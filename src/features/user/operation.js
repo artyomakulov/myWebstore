@@ -1,6 +1,8 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+
+
 
 export const createUser = createAsyncThunk(
   "users/createUser",
@@ -20,9 +22,12 @@ export const loginUser = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const res = await axios.post(`${BASE_URL}/auth/login`, payload);
+      const token = res.data.access_token; 
+      thunkAPI.dispatch(setToken(token));
+
       const login = await axios(`${BASE_URL}/auth/profile`, {
         headers: {
-          Authorization: `Bearer ${res.data.access_token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -34,6 +39,8 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const setToken = createAction("user/setToken");
+
 export const updateUser = createAsyncThunk(
   "users/updateUser",
   async (payload, thunkAPI) => {
@@ -42,7 +49,10 @@ export const updateUser = createAsyncThunk(
       return res.data;
     } catch (err) {
       console.log(err);
-      return thunkAPI.rejectWithValue(err);
+      return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
+
+
+export const logoutUser = createAction("user/logoutUser");

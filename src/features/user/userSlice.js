@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 
-import { createUser, loginUser, updateUser } from "./operation";
+import { createUser, loginUser, updateUser, setToken, logoutUser } from "./operation";
 
 const userSlice = createSlice({
   name: "user",
@@ -12,6 +12,7 @@ const userSlice = createSlice({
     isLoading: false,
     formType: "signup",
     showForm: false,
+    token: null,
   },
   reducers: {
     addItemToCart: (state, { payload }) => {
@@ -45,6 +46,7 @@ const userSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.currentUser = action.payload;
+        state.token = action.payload.token;
         state.isLoading = false;
       })
       .addCase(createUser.rejected, (state, action) => {
@@ -62,6 +64,10 @@ const userSlice = createSlice({
         state.isLoading = false;
         Notify.failure(action.payload);
       })
+      .addCase(logoutUser, (state) => {
+        state.currentUser = null;
+        state.token = null;
+      })
       .addCase(updateUser.pending, (state, action) => {
         state.isLoading = true;
       })
@@ -72,6 +78,9 @@ const userSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
       });
+    builder.addCase(setToken, (state, action) => {
+      state.token = action.payload;
+    });
   },
 });
 

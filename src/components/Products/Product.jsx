@@ -10,6 +10,8 @@ const SIZES = [42, 43, 44, 45, 46];
 const Product = (item) => {
   const { title, images, price, description } = item;
 
+  console.log('images', images)
+
   const dispatch = useDispatch();
 
   const [currentImage, setCurrentImage] = useState();
